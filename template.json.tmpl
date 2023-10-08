@@ -1,0 +1,34 @@
+{
+  "prtg": {
+    {{- if .THUSRINFO}}
+    "sessions": {{.THUSRINFO.USR_TABL | len}},
+    "users": {{.THUSRINFO.USR_TABL | unique "BNAME"}},
+    "transactions": {{.THUSRINFO.USR_TABL | unique "TCODE"}},
+    "terminals": {{.THUSRINFO.USR_TABL | unique "TERM"}},
+    {{- end}}
+    {{- if .GET_CPU_ALL}}
+    "cpu utilization user %": {{.GET_CPU_ALL.TF_CPU_ALL | sum "USR_TOTAL"}},
+    "cpu utilization system %": {{.GET_CPU_ALL.TF_CPU_ALL | sum "SYS_TOTAL"}},
+    "cpu utilization idle %": {{.GET_CPU_ALL.TF_CPU_ALL | sum "IDLE_TRUE"}},
+    "cpu utilization io wait %": {{.GET_CPU_ALL.TF_CPU_ALL | sum "WAIT_TRUE"}},
+    {{- end}}
+    {{- if .GET_MEM_ALL}}
+    "free memory Kb": {{.GET_MEM_ALL.TF_MEM_ALL | sum "FREE_MEM"}},
+    "configured memory Kb": {{.GET_MEM_ALL.TF_MEM_ALL | sum "PHYS_MEM"}},
+    "swap configured Kb": {{.GET_MEM_ALL.TF_MEM_ALL | sum "SWAP_CONF"}},
+    "swap free Kb": {{.GET_MEM_ALL.TF_MEM_ALL | sum "SWAP_FREE"}},
+    {{- end}}
+    {{- if .GET_LAN_SINGLE}}
+    "lan packets in/s": {{.GET_LAN_SINGLE.TF_LAN_SINGLE | sum "IN_PACKETS" | fallback "null"}},
+    "lan packets out/s": {{.GET_LAN_SINGLE.TF_LAN_SINGLE | sum "OUT_PACKET" | fallback "null"}},
+    "lan errors in/s": {{.GET_LAN_SINGLE.TF_LAN_SINGLE | sum "IN_ERRORS"}},
+    "lan errors out/s": {{.GET_LAN_SINGLE.TF_LAN_SINGLE | sum "OUT_ERRORS"}},
+    {{- end}}
+    {{- if .ERROR}}
+    "error": 1,
+    "text": "{{.ERROR}}"
+    {{- else -}}
+    "text": "Host: {{.CONNECTION.partnerHost}}"
+    {{- end}}
+  }
+}
