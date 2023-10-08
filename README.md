@@ -1,10 +1,17 @@
 # sap-metrics
 
-Duct tape [gorfc](https://github.com/SAP/gorfc#install-gorfc) with Golang [templates](https://pkg.go.dev/text/template) to provide values to [Paessler PRTG](https://www.paessler.com/prtg).
+Duct tape [gorfc](https://github.com/SAP/gorfc#install-gorfc) with Golang [templates](https://pkg.go.dev/text/template) to provide values to 
+[Paessler PRTG](https://www.paessler.com/prtg).
+
+> ✋ UPDATE!  
+> I think I will create a simple HTTP endpoint like `/default_host/sap/public/ping` (handler: `CL_HTTP_EXT_PING`) and skip dealing with RFC calls & setting the right permissions. PRTG can also retrieve values through HTTP, which is simpler.  
+> I really wanted to create something useful in Golang (it was fun to create the template functions). However, sometimes the task is defining the tools, rather than the other way around.
 
 ## TODO
 
 - [ ] format error message
+- [ ] replace *config.yaml* with *config.json*
+- [ ] config and template filename from parameters
 - [ ] escape function for texts
 - [ ] run function modules in parallel
 - [ ] lot of testing?

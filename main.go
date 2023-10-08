@@ -1,18 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"io"
 	"log"
 	"os"
 	"text/template"
 
 	"github.com/sap/gorfc/gorfc"
-	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	Connection gorfc.ConnectionParameters        `yaml:"CONNECTION"`
-	Functions  map[string]map[string]interface{} `yaml:"FUNCTIONS"`
+	Connection gorfc.ConnectionParameters        `json:"CONNECTION"`
+	Functions  map[string]map[string]interface{} `json:"FUNCTIONS"`
 }
 
 func collect(configName string) (map[string]interface{}, error) {
@@ -23,7 +23,7 @@ func collect(configName string) (map[string]interface{}, error) {
 	}
 
 	config := Config{}
-	err = yaml.Unmarshal(content, &config)
+	err = json.Unmarshal(content, &config)
 	if err != nil {
 		return result, err
 	}
@@ -64,12 +64,12 @@ func format(templateName string, result map[string]interface{}, writer io.Writer
 }
 
 func main() {
-	result, err := collect("config.yaml")
+	result, err := collect("config.json")
 	if err != nil {
 		result["ERROR"] = err.Error()
 	}
 
-	// output, err := yaml.Marshal(&result)
+	// output, err := json.Marshal(&result)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
