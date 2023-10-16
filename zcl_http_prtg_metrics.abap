@@ -10,9 +10,9 @@ CLASS zcl_http_prtg_metrics DEFINITION
       END OF prtg_result,
       prtg_results TYPE TABLE OF prtg_result WITH DEFAULT KEY,
       BEGIN OF prtg_response,
-        text    TYPE c LENGTH 2000,
-        error   TYPE i,
-        results TYPE prtg_results,
+        text   TYPE c LENGTH 2000,
+        error  TYPE i,
+        result TYPE prtg_results,
       END OF prtg_response,
       BEGIN OF metrics_respone,
         prtg TYPE prtg_response,
@@ -41,7 +41,7 @@ CLASS zcl_http_prtg_metrics IMPLEMENTATION.
           prtg = VALUE prtg_response(
             text = 'OK'
             error = 0
-            results = me->collect_results( ) ) ). " collect metrics from function modules
+            result = me->collect_results( ) ) ). " collect metrics from function modules
       CATCH cx_root INTO DATA(exception). " runtime will raise an exception cx_sy_no_handler
         data = VALUE metrics_respone(
             prtg = VALUE prtg_response(
@@ -49,13 +49,8 @@ CLASS zcl_http_prtg_metrics IMPLEMENTATION.
               error = 1 ) ).
     ENDTRY.
 
-    DATA(compress) = COND abap_bool( " compress the result if "pretty" header is missing
-        WHEN server->request->get_header_field( name = 'pretty' ) IS INITIAL
-        THEN abap_true
-        ELSE abap_false ).
     DATA(json) = /ui2/cl_json=>serialize( " generate json
         data = data
-        compress = compress
         pretty_name = /ui2/cl_json=>pretty_mode-low_case ).
 
     server->response->set_header_field( " send response
